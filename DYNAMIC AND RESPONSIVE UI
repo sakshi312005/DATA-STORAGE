@@ -1,0 +1,28 @@
+cd backend
+npm init -y
+npm install express mongoose cors dotenv
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
+require("dotenv").config();
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log("MongoDB connected"))
+  .catch((err) => console.error(err));
+
+// Routes
+app.use("/api/tasks", require("./routes/taskRoutes"));
+
+app.listen(5000, () => console.log("Server started on port 5000"));
+npx create-react-app frontend
+cd frontend
+npm install axios react-router-dom
+useEffect(() => {
+  axios.get("http://localhost:5000/api/tasks")
+    .then(res => setTasks(res.data))
+    .catch(err => console.error(err));
+}, []);
